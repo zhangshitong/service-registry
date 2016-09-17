@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.spring.video.domain.*;
+import org.spring.video.feign.ExtractClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,8 @@ public class IndexController {
 	@Autowired
 	private UserRepository userRepo;
 	
+	@Autowired
+	private ExtractClient extractClient;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     @ResponseBody
@@ -43,7 +46,7 @@ public class IndexController {
     @ResponseBody
     public String extractUser(@RequestParam String name) {
 		
-		String u = "";
+		String u = extractClient.extract(name);
 		return u != null? u: "not found user.";
 		
     }
