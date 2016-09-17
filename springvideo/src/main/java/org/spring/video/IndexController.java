@@ -38,6 +38,17 @@ public class IndexController {
 		
     }
 	
+	
+	@RequestMapping(value = "/extractUser", method = RequestMethod.GET)
+    @ResponseBody
+    public String extractUser(@RequestParam String name) {
+		
+		String u = "";
+		return u != null? u: "not found user.";
+		
+    }
+	
+	
 	@RequestMapping(value = "/putUser", method = RequestMethod.GET)
     @ResponseBody
     public String putUser(@RequestParam String name, @RequestParam String age) {
