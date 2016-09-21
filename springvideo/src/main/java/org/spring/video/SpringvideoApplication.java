@@ -15,17 +15,11 @@ import java.util.Map;
 @EnableJpaRepositories
 @EnableFeignClients
 @EnableDiscoveryClient
-@EnableConfigurationProperties(SpringvideoApplication.WebApplicationServiceUrlConfiguration.class)
+@EnableConfigurationProperties(WebApplicationServiceUrlConfiguration.class)
 public class SpringvideoApplication {
 
 	public static void main(String[] args) {
 //		new SpringApplicationBuilder(Application.class).web(true).run(args);
 		SpringApplication.run(SpringvideoApplication.class, args);
-	}
-
-
-	@ConfigurationProperties(prefix = "WebApp")
-	public static class WebApplicationServiceUrlConfiguration{
-		private Map<String, String> serviceUrl = new HashMap();
 	}
 }

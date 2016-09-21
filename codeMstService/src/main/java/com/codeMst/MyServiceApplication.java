@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +19,9 @@ import com.codeMst.domain.Unit;
 import com.codeMst.domain.UnitRepository;
 
 @SpringBootApplication
+@EnableDiscoveryClient
 @RestController
+@RequestMapping(value = "/code")
 public class MyServiceApplication {
 
 	@Autowired
