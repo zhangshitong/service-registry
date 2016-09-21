@@ -1,10 +1,17 @@
 package org.spring.video;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spring.video.domain.*;
 import org.spring.video.feign.ExtractClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,12 +21,21 @@ import org.springframework.core.convert.converter.Converter;
 @RestController
 @RequestMapping(value = "/console")
 public class IndexController {
-	
+
+	private Logger logger = LoggerFactory.getLogger(IndexController.class);
+
 	@Autowired
 	private UserRepository userRepo;
 	
 	@Autowired
 	private ExtractClient extractClient;
+
+	@Autowired
+	private LoadBalancerClient loadBalancer;
+
+
+	@Autowired
+	private WebApplicationServiceUrlConfiguration webApplicationServiceUrlConfiguration;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     @ResponseBody
@@ -45,13 +61,45 @@ public class IndexController {
 	@RequestMapping(value = "/extractUser", method = RequestMethod.GET)
     @ResponseBody
     public String extractUser(@RequestParam String name) {
-		
 		String u = extractClient.extract(name);
 		return u != null? u: "not found user.";
 		
     }
-	
-	
+
+
+	@RequestMapping(value = "/urls", method = RequestMethod.GET)
+	@ResponseBody
+	public String extractUrls() {
+
+		Map<String, String> serviceUrlMap = webApplicationServiceUrlConfiguration.getServiceUrl();
+		logger.info("serviceUrlMap=" + serviceUrlMap);
+		StringBuilder sb = new StringBuilder();
+		if(serviceUrlMap != null && !serviceUrlMap.isEmpty()) {
+			Iterator<Map.Entry<String, String> > it = serviceUrlMap.entrySet().iterator();
+			while (it.hasNext()){
+				Map.Entry<String, String> etry = it.next();
+				URI uri = null;
+				try {
+					uri = new URI(etry.getValue().trim());
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
+				if (uri != null) {
+					ServiceInstance serviceInstance = loadBalancer.choose(etry.getKey());
+					if(serviceInstance != null) {
+						String serviceUrl = loadBalancer.reconstructURI(serviceInstance, uri).toString();
+						logger.info("" + etry.getKey() + ".serviceUrl=" + serviceUrl);
+						sb.append("\n" + etry.getKey() + ".serviceUrl=" + serviceUrl);
+					}
+				}
+			}
+		}
+
+		return sb.toString();
+
+	}
+
+
 	@RequestMapping(value = "/putUser", method = RequestMethod.GET)
     @ResponseBody
     public String putUser(@RequestParam String name, @RequestParam String age) {
