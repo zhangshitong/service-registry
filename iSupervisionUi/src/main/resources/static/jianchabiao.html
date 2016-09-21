@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>noteform</title>
+
+<script type="text/javascript" src="js\jquery-3.0.0\jquery-3.0.0.min.js"></script>
+<script type="text/javascript" src="js\jquery-3.0.0\jquery-form.js"></script>
+<script type="text/javascript" src="js\myapp.js"></script>
+<script type="text/javascript" src="findRestUrl"></script>
+<script>
+$(function(){
+ $("div").click(function(){
+$(this).addClass("select");  
+ });
+})
+</script>
+<style>
+body{
+ background-image:url(wood-bg2.jpg);
+}
+.exlist{
+ background-color:#CDC9C9;
+ margin:30px auto;
+ padding:5px;
+ width:680px;
+ min-height:200px;
+ height:auto;
+ font-family:"微软雅黑";
+ -webkit-box-shadow:4px 4px 5px #333;/*webkit*/ 
+ -moz-box-shadow:4px 4px 5px #333;/*firefox*/  
+ box-shadow:4px 4px 5px #333;/*opera或ie9*/ 
+}
+#title{
+ width:200px;
+ margin:20px auto;
+}
+#title legend{
+ font-size:26px;
+}
+div.exlist_title{
+ background-color:#CDC9C9;
+ width:680px;
+ height:20px;
+}
+div.exlist_title img{
+ float:right;
+ margin:-15px 10px;
+}
+/*-----------form-----------*/
+fieldset{
+ width:90%;
+ border:1px dashed #666;
+ margin:40px auto;
+}
+legend{
+ background-color:#CDC9C9;
+ height:120px;
+ height:30px;
+ color:#630;
+ font-weight:bolder;
+ font-size:20px;
+ line-height:30px;
+ margin:-20px 10px 10px;
+ padding:0 10px;
+}
+div.row{
+ margin:10px;
+ padding:5px;
+}
+div.row label{
+ height:20px;
+ font-size:16px;
+ line-height:20px;
+ margin:0 10px;
+}
+input.txt{
+ background-color:#CDC9C9;
+ color:#333;
+ width:150px;
+ height:20px;
+ margin:0 10px;
+ font-size:16px;
+ line-height:20px;
+ border:none;
+ border-bottom:1px solid #565656;
+}
+input.txt:focus{
+ color:#333;
+ background-color: #FF0;
+ border-bottom:1px solid #F00;
+}
+select{
+ width:100px;
+}
+option{
+ text-align:center;
+}
+input.btn{
+ width:50px;
+ height:20px;
+ color:#000008B;
+ background-color: transparent;
+ border:0;
+ padding:0;
+}
+</style>
+</head>
+<body>
+<div class="exlist">
+ <div class="exlist_title"></div>
+  <div id="title"><legend>检查写实表</legend></div>
+  <form method="post" id="checkInfoForm" name="checkInfoForm">
+   <fieldset>
+   <legend>基本信息</legend>
+     <div class="row">
+     <label>1. 检查日期:</label>
+     <input style="width:100px" class="txt" type="text" id="checkDate" name="checkDate" />
+     <label>2. 检查单位:</label>
+     <select id="unitId" name="unitId" style="width:150px"></select>
+     </div>
+     <div class="row">
+     <label>3. 检查人员:</label>
+	 <input id="userName" name="userName" class="txt" type="text" style="width:100px" disabled="disabled" />
+	 <input id="userId" name="userId" type="text" value="" hidden="true">
+     </div>
+     <div class="row">
+     <label>4. 检查项目:</label><input id="checkOption" name="checkOption" class="txt" style="width:400px" type="text" />
+     </div>
+   </fieldset>
+   <fieldset>
+   <legend>检查结果</legend>
+     <div class="row" id="checkResultDiv">
+		<input id="checkResultCode" name="checkResultCode" type="text" value="" hidden="true">
+     </div>
+     <div class="row">
+     <label>2. 其他事项:</label><input id="others" name="others" class="txt" style="width:400px" type="text" />
+     </div>
+   </fieldset>
+	<div >
+		<div style="text-align:center">
+			<button type="button" style="font-size:1.3em;" id="addBtn">确定</button>&nbsp;&nbsp;&nbsp;
+			<button type="button" style="font-size:1.3em;" id="backBtn">返回</button>
+		</div>
+	</div>
+   </fieldset>
+  </form>
+</div>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	var args = GetUrlParms();//获取参数数组
+	
+	initPage();
+	
+	if (args["modeType"] == "view") {
+		
+		findData(args["checkInfoId"]);
+		
+		$("#checkResult").attr("readonly","readonly");
+		$("#addBtn").hide();
+		
+	} else if (args["modeType"] == "add") {
+		// 检查日期=当前系统时间
+		var sysDate = new Date();
+		$("#checkDate").val(sysDate.toLocaleDateString());
+		
+		// 检查人员=当前登陆人员
+		$.ajax({  
+			url: serviceUrl + "/getUserInfo",   
+			type: 'post', 
+			success: function (obj) {
+				$("#userId").val(obj.userId);
+				$("#userName").val(obj.userName);
+			},
+			failure:function(o) {
+				alert("检查人员信息获取失败。");
+				return;
+			}
+		});
+		
+	} else {
+		alert("初始化页面异常！");
+		return;
+	}
+	
+	$("#backBtn").bind("click",function(){
+		window.location.href="./jianchabiaolist.html";
+	});
+	
+	$("#addBtn").click(function(){
+	
+		// 检查日期
+		if($("#checkDate").val() == ""){
+			alert("检查日期必须输入。");
+			return;
+		}
+		
+		// 检查项目
+		if($("#checkOption").val() == ""){
+			alert("检查项目必须输入。");
+			return;
+		}
+		
+		// 整体状况
+		if($('input[name="checkResult"]:checked').val() == ""){
+			alert("整体状况必须输入。");
+			return;
+		} else {
+			$("#checkResultCode").val($('input[name="checkResult"]:checked').val())
+		}
+		
+		$("#checkInfoForm").ajaxSubmit({
+			type:'post',
+			url: serviceUrl + "/addCheckInfo", 
+			beforeSubmit: function(data) {
+				$("#addBtn").html("<i class=\"am-icon-spinner am-icon-spin\"></i>保存中...");
+			},
+			success:function(rs){
+				if (rs > "0") {
+					$("#addBtn").html("确定");
+					alert('保存成功');
+					$("#backBtn").trigger("click");
+				} else {
+					alert('保存失败');
+					return; 
+				}
+				
+			},
+			error:function(XmlHttpRequest,textStatus,errorThrown){
+				alert('保存失败');
+				$("#addBtn").html("确定");
+			}
+		});
+	});
+});
+
+function initPage() {
+
+	// 加载【检查单位】下拉框数据
+	$.ajax({  
+    	url: serviceUrl + "/findAllUnit",
+    	type: 'post', 
+    	success: function (obj) {
+			if(obj.length == 0) {
+				$('#addBtn').attr('disabled',true);
+    			alert("单位信息获取失败。");
+    			return;
+    		}
+			
+       		for(var i = 0, len = obj.length; i < len; i++) {
+       			$("#unitId").append("<option value='" 
+       				+ obj[i].id + "'>" + obj[i].unitName + "</option>");
+       		}
+       	},
+    	failure:function(o) {
+			alert("单位信息获取失败。");
+    		return;
+    	}
+	});
+	
+	// 加载【整体情况】单选框信息
+	
+	$.ajax({  
+    	url: serviceUrl + "/findByCodeType",   
+    	type: 'post', 
+		data:{
+    		codeType:"1"
+    	},
+    	success: function (obj) {
+			if(obj.length == 0) {
+				$('#addBtn').attr('disabled',true);
+    			alert("整体情况信息获取失败。");
+    			return;
+    		}
+			
+			if (obj.length > 0) {
+				$("#checkResultDiv").append("<label>1. 整体情况:</label>");
+			}
+			
+       		for(var i = 0, len = obj.length; i < len; i++) {
+				if (i == 0) {
+					$("#checkResultDiv").append("<label><input type='radio' checked = true id='checkResult' name='checkResult' value='" 
+						+ obj[i].codeId + "'/>" + obj[i].codeName + "</label>");
+				} else {
+					$("#checkResultDiv").append("<label><input type='radio' id='checkResult' name='checkResult' value='" 
+						+ obj[i].codeId + "'/>" + obj[i].codeName + "</label>");
+				}
+       		}
+       	},
+    	failure:function(o) {
+			alert("整体情况信息获取失败。");
+    		return;
+    	}
+	});
+}
+
+function findData(checkInfoId) {
+
+	$.ajax({  
+    	url: serviceUrl + "/getCheckInfo",  
+    	type: 'post', 
+    	data:{
+    		id:checkInfoId
+    	},
+    	success: function (obj) {
+    		
+    		$("#checkDate").val(obj.checkInfo.checkDate);
+			$("#unitId").val(obj.checkInfo.unitId);
+			$("#userId").val(obj.checkInfo.userId);
+    		$("#userName").val(obj.userName);
+			$("#checkOption").val(obj.checkInfo.checkOption);
+			$("#checkResultCode").val(obj.checkInfo.checkResultCode);
+			$("input[name='checkResult'][value='"+obj.checkInfo.checkResultCode+"']").attr("checked",true);
+			$("#others").val(obj.checkInfo.others);
+    	},
+    	failure:function(o) {
+    	}
+	});
+}
+
+//获取URL所有参数
+function GetUrlParms() {
+	var args = new Object();
+	var query = location.search.substring(1); //获取查询串   
+	var pairs = query.split("&"); //在逗号处断开   
+	for (var i = 0; i < pairs.length; i++) {
+		var pos = pairs[i].indexOf('='); //查找name=value   
+		if (pos == -1) continue; //如果没有找到就跳过   
+		var argname = pairs[i].substring(0, pos); //提取name   
+		var value = pairs[i].substring(pos + 1); //提取value   
+		args[argname] = unescape(value); //存为属性   
+	}
+	return args;
+}
+
+</script>
+</body>
+</html>
