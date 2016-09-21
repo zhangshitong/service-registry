@@ -1,0 +1,9 @@
+--------Get user ----
+URL: http://domain/uaa/user/fetchUser
+Params: ?name=user
+Method: Get
+Result:
+{"id":1,"name":"user","realName":"Normal-User","departId":"001","age":null}
+
+---------end----------
+

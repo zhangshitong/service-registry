@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -47,8 +48,11 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 	@Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
 	protected static class LoginConfig extends WebSecurityConfigurerAdapter {
 		
+//		@Autowired
+//		private AuthenticationManager authenticationManager;
+
 		@Autowired
-		private AuthenticationManager authenticationManager;
+		private UserDetailsService authUserDetailService;
 		
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
@@ -58,11 +62,7 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 		
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-			auth.parentAuthenticationManager(authenticationManager);
-			
-//			auth
-//            .inMemoryAuthentication()
-//                .withUser("user").password("password").roles("USER");
+			auth.userDetailsService(authUserDetailService);
 		}
 	}
 	
@@ -75,7 +75,9 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 	    public void configure(HttpSecurity http) throws Exception {
 	        http
 	            .antMatcher("/oauth/user")
-	            .authorizeRequests().anyRequest().authenticated();
+	            .authorizeRequests().anyRequest().authenticated().and()
+					.antMatcher("/user/**")
+					.authorizeRequests().anyRequest().authenticated();
 	    }
 	    
 	    @Override
