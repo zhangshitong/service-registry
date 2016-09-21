@@ -1,5 +1,5 @@
 --------Get user ----
-URL: http://domain/uaa/user/fetchUser
+URL: http://oauth.iop.com/uaa/user/fetchUser
 Params: ?name=user
 Method: Get
 Result:

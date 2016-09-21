@@ -13,6 +13,7 @@ public class UserBaseInfo {
     private String departId;
     private Integer age;
 
+    private String[] roles;
 
     public Long getId() {
         return id;
@@ -52,5 +53,13 @@ public class UserBaseInfo {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String[] getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = roles;
     }
 }

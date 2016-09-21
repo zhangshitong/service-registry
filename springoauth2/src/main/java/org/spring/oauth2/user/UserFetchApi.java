@@ -31,6 +31,7 @@ public class UserFetchApi {
             result.setDepartId(u.getDepartId());
             result.setId(u.getId());
             result.setRealName(u.getRealName());
+            result.setRoles(u.getUserRoles());
         }
         return  result;
     }
@@ -46,6 +47,7 @@ public class UserFetchApi {
             result.setDepartId(u.getDepartId());
             result.setId(u.getId());
             result.setRealName(u.getRealName());
+            result.setRoles(u.getUserRoles());
         }
         return  result;
     }
