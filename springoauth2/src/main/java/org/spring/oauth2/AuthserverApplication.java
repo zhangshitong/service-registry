@@ -31,7 +31,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan
 @EnableAutoConfiguration
 @Controller
-@SessionAttributes("authorizationRequest")
 public class AuthserverApplication extends WebMvcConfigurerAdapter {
 
 	public static void main(String[] args) {
@@ -69,15 +68,13 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 	@Configuration
 	@EnableResourceServer
 	@RestController
-	@Order(ManagementServerProperties.BASIC_AUTH_ORDER)
 	protected static class ResourceServerConfig  extends ResourceServerConfigurerAdapter {
 		
 	    @Override
 	    public void configure(HttpSecurity http) throws Exception {
-	        http
-	            .antMatcher("/oauth/user")
-	            .authorizeRequests().anyRequest().authenticated();
-	    }
+			http.antMatcher("/oauth/user/**")
+					.authorizeRequests().anyRequest().authenticated().and();
+		}
 	    
 	    @Override
 		public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
