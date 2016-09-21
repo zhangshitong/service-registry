@@ -49,6 +49,7 @@ public class MyServiceApplication {
 		Iterator<Map.Entry<String, String> > it = extractUrlMap.entrySet().iterator();
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;
+
 		while (it.hasNext()) {
 			Map.Entry<String, String> etry = it.next();
 			String applicationName = etry.getKey().replaceAll("-", "_");
@@ -58,6 +59,10 @@ public class MyServiceApplication {
 				first = false;
 			}
 			sb.append("\n").append("var "+applicationName + " = '"+etry.getValue()+"';");
+		}
+
+		if(first){
+			sb.append("\n").append("var serviceUrl = 'http://www.nothing.com';");
 		}
 		return sb.toString();
     }
