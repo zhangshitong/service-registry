@@ -12,8 +12,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.core.convert.converter.Converter;
 @RestController
+@RequestMapping(value = "/console")
 public class IndexController {
-	
 	
 	@Autowired
 	private UserRepository userRepo;
