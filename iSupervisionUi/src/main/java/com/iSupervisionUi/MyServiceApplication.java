@@ -15,11 +15,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @SpringBootApplication
 @RestController
@@ -43,8 +46,9 @@ public class MyServiceApplication {
 	
 	@RequestMapping(value = "/findRestUrl.js", method = {RequestMethod.GET})
     @ResponseBody
-    public String findRestUrl() {
+    public String findRestUrl(HttpServletRequest request) {
 
+		CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 		Map<String, String> extractUrlMap = extractUrls();
 		Iterator<Map.Entry<String, String> > it = extractUrlMap.entrySet().iterator();
 		StringBuilder sb = new StringBuilder();
@@ -64,6 +68,17 @@ public class MyServiceApplication {
 		if(first){
 			sb.append("\n").append("var serviceUrl = 'http://www.nothing.com';");
 		}
+//
+//
+//		if(csrf != null){
+//			sb.append("\n").append("var csrfHeaderName='"+csrf.getHeaderName()+"'");
+//			sb.append("\n").append("var csrfParamName='"+csrf.getParameterName()+"'");
+//			sb.append("\n").append("var csrfToken='"+csrf.getToken()+"'");
+//		}
+
+
+
+
 		return sb.toString();
     }
 	
