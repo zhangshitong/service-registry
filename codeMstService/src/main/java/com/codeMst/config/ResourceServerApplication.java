@@ -22,7 +22,7 @@ public class ResourceServerApplication {
     protected static class ResourceServerConfig  extends ResourceServerConfigurerAdapter {
         @Override
         public void configure(HttpSecurity http) throws Exception {
-            http.antMatcher("/code/user").authorizeRequests().anyRequest()
+            http.antMatcher("/code/**").authorizeRequests().anyRequest()
                     .authenticated();
         }
     }

@@ -11,13 +11,17 @@
     <script type="text/javascript" src="findRestUrl.js"></script>
 </head>
 <body class="box">
-
+<!--<iframe src="http://stzhang-pc:8089/srv/getUserInfo"></iframe>-->
 <script type="text/javascript">
+
     $(function () {
         $.ajax({
-            url: "http://localhost:8089/srv/index?name=stzhang",
-            type: 'get'});
-
+            url: serviceUrl + "/getUserInfo",
+            type: 'post',
+            xhrFields: {
+                withCredentials: true
+            }
+        });
         });
 
     </script>

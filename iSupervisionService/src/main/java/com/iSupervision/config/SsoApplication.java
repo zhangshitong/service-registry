@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.ComponentScan;
@@ -60,46 +61,43 @@ public class SsoApplication {
 
 	@Configuration
 	@Component
-//	@EnableOAuth2Sso
+	@EnableOAuth2Sso
 	public static class LoginConfigurer extends WebSecurityConfigurerAdapter {
+
+		@Value("${security.trust.origin}")
+		private String trustOrigin;
 
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
+			http.headers().frameOptions().disable();
 			http.antMatcher("/**").authorizeRequests().anyRequest()
-					.permitAll().and().csrf()
-					.csrfTokenRepository(csrfTokenRepository()).and()
-					.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
+					.authenticated().and().csrf().disable()
+					.addFilterAfter(xhrFieldsHeaderFilter(), CsrfFilter.class)
 					.logout().logoutUrl("/logout").permitAll()
 					.logoutSuccessUrl("/");
 		}
 
-		private Filter csrfHeaderFilter() {
+		private Filter xhrFieldsHeaderFilter() {
 			return new OncePerRequestFilter() {
 				@Override
 				protected void doFilterInternal(HttpServletRequest request,
 						HttpServletResponse response, FilterChain filterChain)
 						throws ServletException, IOException {
-					CsrfToken csrf = (CsrfToken) request
-							.getAttribute(CsrfToken.class.getName());
-					if (csrf != null) {
-						Cookie cookie = new Cookie("XSRF-TOKEN",
-								csrf.getToken());
-						cookie.setPath("/");
-						response.addCookie(cookie);
-					}
-
-					response.addHeader("Access-Control-Allow-Origin","*");
-					response.addHeader("Access-Control-Allow-Methods","*");
-
+//					CsrfToken csrf = (CsrfToken) request
+//							.getAttribute(CsrfToken.class.getName());
+//					if (csrf != null) {
+//						Cookie cookie = new Cookie("XSRF-TOKEN",
+//								csrf.getToken());
+//						cookie.setPath(request.getContextPath());
+//						response.addCookie(cookie);
+//					}
+					response.addHeader("Access-Control-Allow-Origin",trustOrigin);
+					response.addHeader("Access-Control-Allow-Methods","GET,POST,DELETE,PUT");
+					response.addHeader("Access-Control-Allow-Credentials","true");
 					filterChain.doFilter(request, response);
 				}
 			};
 		}
 
-		private CsrfTokenRepository csrfTokenRepository() {
-			HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-			repository.setHeaderName("X-XSRF-TOKEN");
-			return repository;
-		}
 	}
 }

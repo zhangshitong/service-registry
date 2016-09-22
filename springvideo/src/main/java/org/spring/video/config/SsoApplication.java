@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
@@ -73,8 +74,12 @@ public class SsoApplication {
 	@EnableOAuth2Sso
 	public static class LoginConfigurer extends WebSecurityConfigurerAdapter {
 
+		@Value("${security.trust.origin}")
+		private String trustOrigin;
+
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
+			http.headers().frameOptions().disable();
 			http.antMatcher("/console/**").authorizeRequests().anyRequest()
 					.authenticated().and().csrf()
 					.csrfTokenRepository(csrfTokenRepository()).and()
@@ -94,13 +99,12 @@ public class SsoApplication {
 					if (csrf != null) {
 						Cookie cookie = new Cookie("XSRF-TOKEN",
 								csrf.getToken());
-						cookie.setPath("/");
+						cookie.setPath(request.getContextPath());
 						response.addCookie(cookie);
 					}
-
-					response.addHeader("Access-Control-Allow-Origin","*");
-					response.addHeader("Access-Control-Allow-Methods","*");
-
+					response.addHeader("Access-Control-Allow-Origin",trustOrigin);
+					response.addHeader("Access-Control-Allow-Methods","GET,POST,DELETE,PUT");
+					response.addHeader("Access-Control-Allow-Credentials","true");
 					filterChain.doFilter(request, response);
 				}
 			};

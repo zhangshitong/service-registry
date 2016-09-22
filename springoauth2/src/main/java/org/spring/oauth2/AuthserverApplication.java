@@ -17,6 +17,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -25,6 +26,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.endpoint.AuthorizationEndpoint;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +56,12 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 	public static void main(String[] args) {
 		SpringApplication.run(AuthserverApplication.class, args);
 	}
-	
+
+
+	@Autowired
+	private AuthorizationEndpoint authorizationEndpoint;
+
+
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/login").setViewName("login2");
@@ -62,6 +69,7 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 	}
 
 	@Configuration
+	@EnableWebSecurity
 	@Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
 	protected static class LoginConfig extends WebSecurityConfigurerAdapter {
 		
@@ -74,7 +82,7 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.formLogin().loginPage("/login").permitAll().and().authorizeRequests()
-					.anyRequest().permitAll();
+					.anyRequest().authenticated();
 		}
 		
 		@Override
@@ -90,8 +98,8 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 		
 	    @Override
 	    public void configure(HttpSecurity http) throws Exception {
-			http.antMatcher("/oauth/user")
-					.authorizeRequests().anyRequest().authenticated().and();
+			http.antMatcher("/oauth/user/**")
+					.authorizeRequests().anyRequest().authenticated();
 		}
 	    
 	    @Override
@@ -121,30 +129,5 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 							"password","client_credentials").scopes("trust").autoApprove(true);
 		}
 	}
-//
-//	@Bean
-//	public FilterRegistrationBean someFilterRegistration() {
-//		FilterRegistrationBean registration = new FilterRegistrationBean();
-//		registration.setFilter(allowOriginFilter());
-//		registration.addUrlPatterns("/oauth/authorize");
-//		registration.setOrder(1);
-//		return registration;
-//	}
-//
-//	@Bean
-//	public Filter allowOriginFilter() {
-//		return new OncePerRequestFilter() {
-//			@Override
-//			protected void doFilterInternal(HttpServletRequest request,
-//											HttpServletResponse response, FilterChain filterChain)
-//					throws ServletException, IOException {
-//
-//				logger.info("OncePerRequestFilter Access-Control-Allow-Origin:*");
-//				response.addHeader("Access-Control-Allow-Origin","*");
-//				response.addHeader("Access-Control-Allow-Methods","*");
-//				filterChain.doFilter(request, response);
-//			}
-//		};
-//	}
 
 }

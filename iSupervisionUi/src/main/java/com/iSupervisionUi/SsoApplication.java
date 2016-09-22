@@ -65,37 +65,11 @@ public class SsoApplication {
 
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
+			http.headers().frameOptions().disable();
 			http.antMatcher("/**").authorizeRequests().anyRequest()
-					.authenticated().and().csrf()
-					.csrfTokenRepository(csrfTokenRepository()).and()
-					.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
+					.authenticated().and().csrf().disable()
 					.logout().logoutUrl("/logout").permitAll()
 					.logoutSuccessUrl("/");
-		}
-
-		private Filter csrfHeaderFilter() {
-			return new OncePerRequestFilter() {
-				@Override
-				protected void doFilterInternal(HttpServletRequest request,
-						HttpServletResponse response, FilterChain filterChain)
-						throws ServletException, IOException {
-					CsrfToken csrf = (CsrfToken) request
-							.getAttribute(CsrfToken.class.getName());
-					if (csrf != null) {
-						Cookie cookie = new Cookie("XSRF-TOKEN",
-								csrf.getToken());
-						cookie.setPath("/");
-						response.addCookie(cookie);
-					}
-					filterChain.doFilter(request, response);
-				}
-			};
-		}
-
-		private CsrfTokenRepository csrfTokenRepository() {
-			HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-			repository.setHeaderName("X-XSRF-TOKEN");
-			return repository;
 		}
 	}
 }

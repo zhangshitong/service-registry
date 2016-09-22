@@ -178,11 +178,10 @@ public class MyServiceApplication {
 	
 	@RequestMapping(value = "/getUserInfo", method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-    public UserMap getUserInfo(String name) {
-		
+    public UserMap getUserInfo(Principal user) {
+		String userName = user.getName();
 		// 调用外部Service获取用户信息
-		UserMap userMap = extractUserClient.user(name);
-				
+		UserMap userMap = extractUserClient.user(userName);
 		return userMap;
     }
 
