@@ -34,7 +34,7 @@ public class MyServiceApplication {
 	@Autowired
 	private CheckInfoRepository checkInfoRepo;
 	
-	private final static String url = "http://localhost:8088";
+	private final static String url = "http://code-service";
 	
 	public static void main(String[] args) {
 		SpringApplication.run(MyServiceApplication.class, args);
