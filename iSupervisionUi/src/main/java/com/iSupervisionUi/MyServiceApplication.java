@@ -41,7 +41,7 @@ public class MyServiceApplication {
 		SpringApplication.run(MyServiceApplication.class, args);
 	}
 	
-	@RequestMapping(value = "/findRestUrl.js", method = {RequestMethod.GET})
+	@RequestMapping(value = "/findRestUrl.js", method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public String findRestUrl() {
 
@@ -71,7 +71,7 @@ public class MyServiceApplication {
 	@Controller
 	public static class indexControll{
 		
-		@RequestMapping(value = "/", method = {RequestMethod.GET})
+		@RequestMapping(value = "/", method = {RequestMethod.GET,RequestMethod.POST})
 	    public String index() {
 			return "redirect:home.html";
 	    }

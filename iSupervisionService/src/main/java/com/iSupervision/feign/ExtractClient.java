@@ -14,10 +14,10 @@ import com.iSupervision.feign.configuration.FeignClientConfiguration;
 @FeignClient(value = "http://code-service/srv", configuration = FeignClientConfiguration.class)
 public interface ExtractClient {
 
-	@RequestMapping(method = RequestMethod.GET, value = "/findUnitById")
+	@RequestMapping(method = {RequestMethod.GET,RequestMethod.POST}, value = "/findUnitById")
 	UnitMap findUnitById(@RequestParam String id);
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/findByCodeTypeAndCodeId")
+	@RequestMapping(method = {RequestMethod.GET,RequestMethod.POST}, value = "/findByCodeTypeAndCodeId")
 	CodeMstMap findByCodeTypeAndCodeId(@RequestParam String codeType, @RequestParam String codeId);
 	
 	@RequestMapping(value = "/findAllUnit", method = {RequestMethod.GET,RequestMethod.POST})
