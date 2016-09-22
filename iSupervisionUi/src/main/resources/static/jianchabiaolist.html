@@ -102,7 +102,7 @@
 	$(function () {
 		$.ajax({  
 			url: serviceUrl + "/findAllCheckInfo", 
-			type: 'post',  
+			type: 'get',  
 			success: function (obj) {
 				var checkInfoExt;
 				$("#serviceTbody").empty();
@@ -166,7 +166,7 @@
 		var checkInfoId = $(el).parent().parent().attr("id");
 		$.ajax({  
     	url: serviceUrl + "/delCheckInfo", 
-    	type: 'post',  
+    	type: 'get',  
     	data:{
     		id:checkInfoId
     	},
