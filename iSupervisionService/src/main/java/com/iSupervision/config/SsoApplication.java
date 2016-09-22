@@ -49,7 +49,7 @@ public class SsoApplication {
 		public String loginSuccess() {
 			return "redirect:/#/";
 		}
-		
+
 		@RequestMapping(value = "/logout")
 	    public String logout(HttpSession session) {
 			session.invalidate();
@@ -60,7 +60,7 @@ public class SsoApplication {
 
 	@Configuration
 	@Component
-	@EnableOAuth2Sso
+//	@EnableOAuth2Sso
 	public static class LoginConfigurer extends WebSecurityConfigurerAdapter {
 
 		@Override

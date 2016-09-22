@@ -90,7 +90,7 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 		
 	    @Override
 	    public void configure(HttpSecurity http) throws Exception {
-			http.antMatcher("/oauth/user/**")
+			http.antMatcher("/oauth/user")
 					.authorizeRequests().anyRequest().authenticated().and();
 		}
 	    
