@@ -102,7 +102,10 @@
 	$(function () {
 		$.ajax({  
 			url: serviceUrl + "/findAllCheckInfo", 
-			type: 'get',  
+			type: 'post', 
+			xhrFields: {
+				withCredentials: true
+			},
 			success: function (obj) {
 				var checkInfoExt;
 				$("#serviceTbody").empty();
@@ -165,27 +168,30 @@
 	
 		var checkInfoId = $(el).parent().parent().attr("id");
 		$.ajax({  
-    	url: serviceUrl + "/delCheckInfo", 
-    	type: 'get',  
-    	data:{
-    		id:checkInfoId
-    	},
-    	success: function (obj) {
-    		if (obj == "success") {
-    			alert("删除成功！");
-				window.location.reload();
-    		} else {
-				alert("删除失败！");
-			}
-    		if (obj == "1") {
-    			alert("Delete failed!");
-    			return;
-    		}
-    	},
-    	failure:function(o) {
-    		alert("删除成功！");
-    	}
-	});
+	    	url: serviceUrl + "/delCheckInfo", 
+	    	type: 'post', 
+			xhrFields: {
+				withCredentials: true
+			},
+	    	data:{
+	    		id:checkInfoId
+	    	},
+	    	success: function (obj) {
+	    		if (obj == "success") {
+	    			alert("删除成功！");
+					window.location.reload();
+	    		} else {
+					alert("删除失败！");
+				}
+	    		if (obj == "1") {
+	    			alert("Delete failed!");
+	    			return;
+	    		}
+	    	},
+	    	failure:function(o) {
+	    		alert("删除成功！");
+	    	}
+		});
 	}
 
 </script>

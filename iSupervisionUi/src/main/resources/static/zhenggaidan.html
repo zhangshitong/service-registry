@@ -171,7 +171,10 @@ $(document).ready(function(){
 		}
 		
 		$.ajax({
-			method: "POST",
+			type: 'post', 
+			xhrFields: {
+				withCredentials: true
+			},
 			dataType: "json",
 			url: serviceUrl + "/login",
 			data: {
@@ -204,7 +207,10 @@ $(document).ready(function(){
 		}
 		
 		$.ajax({
-			method: "POST",
+			type: 'post', 
+			xhrFields: {
+				withCredentials: true
+			},
 			dataType: "json",
 			url: serviceUrl + "/login",
 			data: {

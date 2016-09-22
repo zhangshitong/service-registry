@@ -170,7 +170,10 @@ $(document).ready(function(){
 		// 检查人员=当前登陆人员
 		$.ajax({  
 			url: serviceUrl + "/getUserInfo",
-			type: 'get', 
+			type: 'post', 
+			xhrFields: {
+				withCredentials: true
+			},
 			success: function (obj) {
 				$("#userId").val(obj.name);
 				$("#userName").val(obj.realName);
@@ -213,7 +216,10 @@ $(document).ready(function(){
 		}
 		
 		$("#checkInfoForm").ajaxSubmit({
-			type:'get',
+			type: 'post', 
+			xhrFields: {
+				withCredentials: true
+			},
 			url: serviceUrl + "/addCheckInfo", 
 			beforeSubmit: function(data) {
 				$("#addBtn").html("<i class=\"am-icon-spinner am-icon-spin\"></i>保存中...");
@@ -242,7 +248,10 @@ function initPage() {
 	// 加载【检查单位】下拉框数据
 	$.ajax({  
     	url: serviceUrl + "/findAllUnit",
-    	type: 'get', 
+    	type: 'post', 
+		xhrFields: {
+			withCredentials: true
+		},
     	success: function (obj) {
 			if(obj.length == 0) {
 				$('#addBtn').attr('disabled',true);
@@ -265,7 +274,10 @@ function initPage() {
 	
 	$.ajax({  
     	url: serviceUrl + "/findByCodeType",   
-    	type: 'get', 
+    	type: 'post', 
+		xhrFields: {
+			withCredentials: true
+		},
 		data:{
     		codeType:"1"
     	},
@@ -301,7 +313,10 @@ function findData(checkInfoId) {
 
 	$.ajax({  
     	url: serviceUrl + "/getCheckInfo",  
-    	type: 'get', 
+    	type: 'post', 
+		xhrFields: {
+			withCredentials: true
+		},
     	data:{
     		id:checkInfoId
     	},
