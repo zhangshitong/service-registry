@@ -1,5 +1,6 @@
 package com.iSupervision;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import com.iSupervision.domain.CodeMstMap;
 import com.iSupervision.domain.UnitMap;
 import com.iSupervision.domain.UserMap;
 import com.iSupervision.feign.ExtractClient;
+import com.iSupervision.feign.ExtractUserClient;
 
 
 @SpringBootApplication
@@ -36,6 +38,9 @@ public class MyServiceApplication {
 	
 	@Autowired
 	private ExtractClient extractClient;
+	
+	@Autowired
+	private ExtractUserClient extractUserClient;
 	
 //	private final static String url = "http://code-service";
 	
@@ -70,6 +75,7 @@ public class MyServiceApplication {
 //		MultiValueMap<String, Object> param = null;
 		CodeMstMap codeMstMap = null;
 		UnitMap unitMap = null;
+		UserMap userMap = null;
 		
 		for (CheckInfo checkInfo : checkInfos) {
 			CheckInfoExt checkInfoExt = new CheckInfoExt();
@@ -94,8 +100,9 @@ public class MyServiceApplication {
 			codeMstMap = extractClient.findByCodeTypeAndCodeId("1",checkInfo.getCheckResultCode());
 			checkInfoExt.setCheckResultName(codeMstMap.getCodeName());
 			
-			// TODO 调用外部Service获取用户信息
-			checkInfoExt.setUserName("Admin");
+			// 调用外部Service获取用户信息
+			userMap = extractUserClient.user(checkInfo.getUserId());
+			checkInfoExt.setUserName(userMap.getRealName());
 
 			checkInfoExts.add(checkInfoExt);
 		}
@@ -112,6 +119,7 @@ public class MyServiceApplication {
 //		MultiValueMap<String, Object> param = null;
 		CodeMstMap codeMstMap = null;
 		UnitMap unitMap = null;
+		UserMap userMap = null;
 		
 		CheckInfoExt checkInfoExt = new CheckInfoExt();
 		CheckInfo checkInfo = checkInfoRepo.findById(Long.parseLong(id));
@@ -135,8 +143,9 @@ public class MyServiceApplication {
 		codeMstMap = extractClient.findByCodeTypeAndCodeId("1",checkInfo.getCheckResultCode());
 		checkInfoExt.setCheckResultName(codeMstMap.getCodeName());
 		
-		// TODO 调用外部Service获取用户信息
-		checkInfoExt.setUserName("Admin");
+		// 调用外部Service获取用户信息
+		userMap = extractUserClient.user(checkInfo.getUserId());
+		checkInfoExt.setUserName(userMap.getRealName());
 		
 		return checkInfoExt;
     }
@@ -151,7 +160,7 @@ public class MyServiceApplication {
 		checkInfo.setCheckResultCode(request.getParameter("checkResultCode"));
 		checkInfo.setOthers(request.getParameter("others"));
 		checkInfo.setUnitId(Long.parseLong(request.getParameter("unitId")));
-		checkInfo.setUserId(Long.parseLong(request.getParameter("userId")));
+		checkInfo.setUserId(request.getParameter("userId"));
 		
 		checkInfo = checkInfoRepo.save(checkInfo);
 		
@@ -169,13 +178,11 @@ public class MyServiceApplication {
 	
 	@RequestMapping(value = "/getUserInfo", method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-    public UserMap getUserInfo() {
+    public UserMap getUserInfo(Principal user) {
 		
-		// TODO 调用外部Service获取用户信息
-		UserMap userMap = new UserMap();
-		userMap.setUserId("1");
-		userMap.setUserName("Admin");
-		
+		// 调用外部Service获取用户信息
+		UserMap userMap = extractUserClient.user(user.getName());	 
+				
 		return userMap;
     }
 

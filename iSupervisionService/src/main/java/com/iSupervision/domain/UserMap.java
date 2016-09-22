@@ -2,29 +2,22 @@ package com.iSupervision.domain;
 
 public class UserMap {
 
-    /** 用户ID */
-    private String userId;
+    private String name;
+    private String realName;
 
-    /** 用户姓名 */
-    private String userName;
-    
-    public UserMap(){}
+    public String getName() {
+        return name;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public String getRealName() {
+        return realName;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
 }
