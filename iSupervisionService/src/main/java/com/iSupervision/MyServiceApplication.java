@@ -9,14 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.iSupervision.domain.CheckInfo;
 import com.iSupervision.domain.CheckInfoExt;
@@ -24,6 +21,7 @@ import com.iSupervision.domain.CheckInfoRepository;
 import com.iSupervision.domain.CodeMstMap;
 import com.iSupervision.domain.UnitMap;
 import com.iSupervision.domain.UserMap;
+import com.iSupervision.feign.ExtractClient;
 
 
 @SpringBootApplication
@@ -34,7 +32,10 @@ public class MyServiceApplication {
 	@Autowired
 	private CheckInfoRepository checkInfoRepo;
 	
-	private final static String url = "http://code-service";
+	@Autowired
+	private ExtractClient extractClient;
+	
+//	private final static String url = "http://code-service";
 	
 	public static void main(String[] args) {
 		SpringApplication.run(MyServiceApplication.class, args);
@@ -62,9 +63,9 @@ public class MyServiceApplication {
 		
 		List<CheckInfo> checkInfos = checkInfoRepo.findAll();
 		
-		RestTemplate restTemplate = new RestTemplate();
-		
-		MultiValueMap<String, Object> param = null;
+//		RestTemplate restTemplate = new RestTemplate();
+//		
+//		MultiValueMap<String, Object> param = null;
 		CodeMstMap codeMstMap = null;
 		UnitMap unitMap = null;
 		
@@ -74,17 +75,21 @@ public class MyServiceApplication {
 			checkInfoExt.setCheckInfo(checkInfo);
 			
 			// 调用外部Service获取单位信息
-			param = new LinkedMultiValueMap<>();
-			param.add("id", checkInfo.getUnitId().toString());
+//			param = new LinkedMultiValueMap<>();
+//			param.add("id", checkInfo.getUnitId().toString());
+//			
+//			unitMap = restTemplate.postForObject(url + "/findUnitById", param, UnitMap.class);
 			
-			unitMap = restTemplate.postForObject(url + "/findUnitById", param, UnitMap.class);
+			unitMap = extractClient.findUnitById(checkInfo.getUnitId().toString());
 			checkInfoExt.setUnitName(unitMap.getUnitName());
 			
 			// 调用外部Service获取检查结果信息
-			param.clear();
-			param.add("codeType", "1");
-			param.add("codeId", checkInfo.getCheckResultCode());
-			codeMstMap = restTemplate.postForObject(url + "/findByCodeTypeAndCodeId", param, CodeMstMap.class);
+//			param.clear();
+//			param.add("codeType", "1");
+//			param.add("codeId", checkInfo.getCheckResultCode());
+//			codeMstMap = restTemplate.postForObject(url + "/findByCodeTypeAndCodeId", param, CodeMstMap.class);
+			
+			codeMstMap = extractClient.findByCodeTypeAndCodeId("1",checkInfo.getCheckResultCode());
 			checkInfoExt.setCheckResultName(codeMstMap.getCodeName());
 			
 			// TODO 调用外部Service获取用户信息
@@ -100,9 +105,9 @@ public class MyServiceApplication {
     @ResponseBody
     public CheckInfoExt getCheckInfo(@RequestParam String id) {
 		
-		RestTemplate restTemplate = new RestTemplate();
+//		RestTemplate restTemplate = new RestTemplate();
 		
-		MultiValueMap<String, Object> param = null;
+//		MultiValueMap<String, Object> param = null;
 		CodeMstMap codeMstMap = null;
 		UnitMap unitMap = null;
 		
@@ -111,17 +116,21 @@ public class MyServiceApplication {
 		checkInfoExt.setCheckInfo(checkInfo);
 		
 		// 调用外部Service获取单位信息
-		param = new LinkedMultiValueMap<>();
-		param.add("id", checkInfo.getUnitId().toString());
+//		param = new LinkedMultiValueMap<>();
+//		param.add("id", checkInfo.getUnitId().toString());
+//		
+//		unitMap = restTemplate.postForObject(url + "/findUnitById", param, UnitMap.class);
 		
-		unitMap = restTemplate.postForObject(url + "/findUnitById", param, UnitMap.class);
+		unitMap = extractClient.findUnitById(checkInfo.getUnitId().toString());
 		checkInfoExt.setUnitName(unitMap.getUnitName());
 		
 		// 调用外部Service获取检查结果信息
-		param.clear();
-		param.add("codeType", "1");
-		param.add("codeId", checkInfo.getCheckResultCode());
-		codeMstMap = restTemplate.postForObject(url + "/findByCodeTypeAndCodeId", param, CodeMstMap.class);
+//		param.clear();
+//		param.add("codeType", "1");
+//		param.add("codeId", checkInfo.getCheckResultCode());
+//		codeMstMap = restTemplate.postForObject(url + "/findByCodeTypeAndCodeId", param, CodeMstMap.class);
+		
+		codeMstMap = extractClient.findByCodeTypeAndCodeId("1",checkInfo.getCheckResultCode());
 		checkInfoExt.setCheckResultName(codeMstMap.getCodeName());
 		
 		// TODO 调用外部Service获取用户信息
@@ -168,39 +177,41 @@ public class MyServiceApplication {
 		return userMap;
     }
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findAllUnit", method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public List<UnitMap> findAllUnit() {
 		
-		RestTemplate restTemplate = new RestTemplate();
-		
-		MultiValueMap<String, Object> param = null;
+//		RestTemplate restTemplate = new RestTemplate();
+//		
+//		MultiValueMap<String, Object> param = null;
 		List<UnitMap> unitMaps = null;
 		
 		// 调用外部Service获取单位信息
-		param = new LinkedMultiValueMap<>();
+//		param = new LinkedMultiValueMap<>();
 		
-		unitMaps = restTemplate.postForObject(url + "/findAllUnit", param, List.class);
+//		unitMaps = restTemplate.postForObject(url + "/findAllUnit", param, List.class);
+		
+		unitMaps = extractClient.findAllUnit();
 		
 		return unitMaps;
     }
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findByCodeType", method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public List<CodeMstMap> findByCodeType(@RequestParam String codeType) {
 		
-		RestTemplate restTemplate = new RestTemplate();
-		
-		MultiValueMap<String, Object> param = null;
+//		RestTemplate restTemplate = new RestTemplate();
+//		
+//		MultiValueMap<String, Object> param = null;
 		List<CodeMstMap> codeMstMaps = null;
 		
 		// 调用外部Service获取单位信息
-		param = new LinkedMultiValueMap<>();
-		param.add("codeType", "1");
+//		param = new LinkedMultiValueMap<>();
+//		param.add("codeType", "1");
+//		
+//		codeMstMaps = restTemplate.postForObject(url + "/findByCodeType", param, List.class);
 		
-		codeMstMaps = restTemplate.postForObject(url + "/findByCodeType", param, List.class);
+		codeMstMaps = extractClient.findByCodeType("1");
 		
 		return codeMstMaps;
     }
