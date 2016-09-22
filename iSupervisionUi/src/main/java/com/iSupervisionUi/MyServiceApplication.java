@@ -2,6 +2,7 @@ package com.iSupervisionUi;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class MyServiceApplication {
 	
 	@RequestMapping(value = "/findRestUrl.js", method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-    public String findRestUrl(HttpServletRequest request) {
+    public String findRestUrl(HttpServletRequest request, Principal user) {
 
 		CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 		Map<String, String> extractUrlMap = extractUrls();
@@ -68,6 +69,8 @@ public class MyServiceApplication {
 		if(first){
 			sb.append("\n").append("var serviceUrl = 'http://www.nothing.com';");
 		}
+
+		sb.append("\n").append("var service_user_name='"+user.getName()+"';");
 //
 //
 //		if(csrf != null){

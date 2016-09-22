@@ -19,7 +19,7 @@ public class UserFetchApi {
     @Autowired
     private UserRepository userRepo;
 
-    @RequestMapping("/oauth/user/me")
+    @RequestMapping("/user/me")
     @ResponseBody
     public UserBaseInfo user(Principal user) {
         UserBaseInfo result = new UserBaseInfo();
@@ -36,7 +36,7 @@ public class UserFetchApi {
         return  result;
     }
 
-    @RequestMapping("/oauth/user/fetchUser")
+    @RequestMapping("/user/fetchUser")
     @ResponseBody
     public UserBaseInfo user(@RequestParam(required = true) String name) {
         UserBaseInfo result = new UserBaseInfo();

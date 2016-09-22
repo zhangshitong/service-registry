@@ -164,7 +164,7 @@ public class MyServiceApplication {
 		
 		checkInfo = checkInfoRepo.save(checkInfo);
 		
-		return checkInfo.getId().toString();
+		return "success";
     }
 	
 	@RequestMapping(value = "/delCheckInfo", method = {RequestMethod.GET,RequestMethod.POST})
@@ -178,10 +178,10 @@ public class MyServiceApplication {
 	
 	@RequestMapping(value = "/getUserInfo", method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-    public UserMap getUserInfo(Principal user) {
+    public UserMap getUserInfo(String name) {
 		
 		// 调用外部Service获取用户信息
-		UserMap userMap = extractUserClient.user(user.getName());	 
+		UserMap userMap = extractUserClient.user(name);
 				
 		return userMap;
     }

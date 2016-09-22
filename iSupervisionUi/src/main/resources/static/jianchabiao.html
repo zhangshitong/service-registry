@@ -169,7 +169,7 @@ $(document).ready(function(){
 		
 		// 检查人员=当前登陆人员
 		$.ajax({  
-			url: serviceUrl + "/getUserInfo",   
+			url: serviceUrl + "/getUserInfo?name="+service_user_name,
 			type: 'get', 
 			success: function (obj) {
 				$("#userId").val(obj.name);
