@@ -16,7 +16,7 @@ public class CheckInfo {
     
 	/** 检查人员 
 	 * 关联user.id */
-	private Long userId;
+	private String userId;
 	
 	/** 检查单位 
 	 * 关联unitMst.id */
@@ -73,11 +73,11 @@ public class CheckInfo {
 		this.others = others;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

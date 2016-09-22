@@ -172,8 +172,8 @@ $(document).ready(function(){
 			url: serviceUrl + "/getUserInfo",   
 			type: 'get', 
 			success: function (obj) {
-				$("#userId").val(obj.userId);
-				$("#userName").val(obj.userName);
+				$("#userId").val(obj.name);
+				$("#userName").val(obj.realName);
 			},
 			failure:function(o) {
 				alert("检查人员信息获取失败。");
