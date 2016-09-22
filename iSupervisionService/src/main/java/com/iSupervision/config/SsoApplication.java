@@ -64,7 +64,7 @@ public class SsoApplication {
 
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
-			http.antMatcher("/**").authorizeRequests().anyRequest()
+			http.antMatcher("/xxxxxxx/**").authorizeRequests().anyRequest()
 					.authenticated().and().csrf()
 					.csrfTokenRepository(csrfTokenRepository()).and()
 					.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
@@ -86,6 +86,10 @@ public class SsoApplication {
 						cookie.setPath("/");
 						response.addCookie(cookie);
 					}
+
+					response.addHeader("Access-Control-Allow-Origin","*");
+					response.addHeader("Access-Control-Allow-Methods","*");
+
 					filterChain.doFilter(request, response);
 				}
 			};

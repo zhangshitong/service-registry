@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>bootstrap datatable demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="bootstrap2.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="bootstrap2.0.3/css/bootstrap-responsiv.css">
+    <link rel="stylesheet" type="text/css" href="bootstrap2.0.3/css/dataTables.bootstra.css">
+    <script type="text/javascript" src="js\jquery-3.0.0\jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="findRestUrl.js"></script>
+</head>
+<body class="box">
+
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url: "http://localhost:8088/video/console/getUser?name=stzhang",
+            type: 'get'});
+
+        });
+
+    </script>
+</body>
+
+</html>

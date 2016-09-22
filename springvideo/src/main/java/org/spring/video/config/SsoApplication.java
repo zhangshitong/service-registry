@@ -97,6 +97,10 @@ public class SsoApplication {
 						cookie.setPath("/");
 						response.addCookie(cookie);
 					}
+
+					response.addHeader("Access-Control-Allow-Origin","*");
+					response.addHeader("Access-Control-Allow-Methods","*");
+
 					filterChain.doFilter(request, response);
 				}
 			};

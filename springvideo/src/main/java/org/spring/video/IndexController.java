@@ -45,7 +45,7 @@ public class IndexController {
 		
     }
 	
-	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
+	@RequestMapping(value = "/getUser", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String getUser(@RequestParam String name) {
 		
