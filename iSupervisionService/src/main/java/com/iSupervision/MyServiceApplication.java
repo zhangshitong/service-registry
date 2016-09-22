@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +28,7 @@ import com.iSupervision.feign.ExtractClient;
 @SpringBootApplication
 @RestController
 @EnableDiscoveryClient
+@EnableFeignClients
 public class MyServiceApplication {
 
 	@Autowired
@@ -215,5 +217,12 @@ public class MyServiceApplication {
 		
 		return codeMstMaps;
     }
+
+	@RequestMapping(value = "/index", method = {RequestMethod.GET,RequestMethod.POST})
+	@ResponseBody
+	public String index() {
+		return "welcome";
+	}
+
 
 }
