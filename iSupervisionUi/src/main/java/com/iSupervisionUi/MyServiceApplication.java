@@ -112,7 +112,14 @@ public class MyServiceApplication {
 				if (uri != null) {
 					ServiceInstance serviceInstance = loadBalancer.choose(etry.getKey());
 					if(serviceInstance != null) {
-						String serviceUrl = loadBalancer.reconstructURI(serviceInstance, uri).toString();
+						URI reconstructedUri = loadBalancer.reconstructURI(serviceInstance, uri);
+						int port = reconstructedUri.getPort();
+						String serviceUrl = reconstructedUri.toString();
+						if(port == 80){
+//							reconstructedUri.toURL().toString();
+							serviceUrl = serviceUrl.replaceAll(":80", "");
+						}
+//						String serviceUrl = loadBalancer.reconstructURI(serviceInstance, uri).toString();
 						extractUrlMap.put(etry.getKey(), serviceUrl);
 						logger.info("" + etry.getKey() + ".serviceUrl=" + serviceUrl);
 					}

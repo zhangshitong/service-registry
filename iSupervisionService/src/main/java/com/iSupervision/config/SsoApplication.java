@@ -1,7 +1,11 @@
 package com.iSupervision.config;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.Principal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -91,7 +95,32 @@ public class SsoApplication {
 //						cookie.setPath(request.getContextPath());
 //						response.addCookie(cookie);
 //					}
-					response.addHeader("Access-Control-Allow-Origin",trustOrigin);
+
+					String originUrl = request.getHeader("Origin");
+					System.out.println("originUrl=" + originUrl);
+					String originHost = null;
+					URI u = null;
+					if(originUrl != null) {
+						try {
+							u = new URI(originUrl);
+							originHost = u.getHost();
+						} catch (URISyntaxException e) {
+							e.printStackTrace();
+						}
+					}
+					if(originUrl != null && originHost != null) {
+						String pattern = null;
+						System.out.println("originHost=" + originHost);
+						pattern = trustOrigin.replaceAll("\\.", "\\\\.");
+						pattern = pattern.replaceAll("\\*", "\\.\\*");
+						System.out.println(pattern);
+						Pattern p = Pattern.compile(pattern);
+						Matcher m = p.matcher(originHost);
+						if (m.matches()) {
+							response.addHeader("Access-Control-Allow-Origin", originUrl);
+						}
+					}
+//					response.addHeader("Access-Control-Allow-Origin", trustOrigin);
 					response.addHeader("Access-Control-Allow-Methods","GET,POST,DELETE,PUT");
 					response.addHeader("Access-Control-Allow-Credentials","true");
 					filterChain.doFilter(request, response);

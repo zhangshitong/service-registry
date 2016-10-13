@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
@@ -28,9 +29,18 @@ public class ResourceServerApplication {
     }
 
 
-    @Controller
+    @RestController
     public static class UserPrincipalContrl {
         @RequestMapping("/code/user")
+        public Principal user(Principal user) {
+            return user;
+        }
+
+    }
+
+    @RestController
+    public static class UserPrincipalCtl {
+        @RequestMapping("/fetch/user")
         public Principal user(Principal user) {
             return user;
         }
