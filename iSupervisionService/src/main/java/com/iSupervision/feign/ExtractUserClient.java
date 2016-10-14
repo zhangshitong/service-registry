@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.iSupervision.domain.UserMap;
 
 
-@FeignClient(value = "http://oauth-service/uaa", configuration = FeignClientConfiguration.class)
+@FeignClient(value = "http://oauth-server/uaa", configuration = FeignClientConfiguration.class)
 public interface ExtractUserClient {
 
 	@RequestMapping("/oauth/user/fetchUser")

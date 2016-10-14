@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.iSupervision.domain.CodeMstMap;
 import com.iSupervision.domain.UnitMap;
 
-@FeignClient(value = "http://code-service/code", configuration = FeignClientConfiguration.class)
+@FeignClient(value = "http://code-service", configuration = FeignClientConfiguration.class)
 public interface ExtractClient {
 
-	@RequestMapping(method = {RequestMethod.GET}, value = "/findUnitById")
+	@RequestMapping(method = {RequestMethod.GET}, value = "/code/findUnitById")
 	UnitMap findUnitById(@RequestParam("id") String id);
 	
-	@RequestMapping(method = {RequestMethod.GET}, value = "/findByCodeTypeAndCodeId")
+	@RequestMapping(method = {RequestMethod.GET}, value = "/code/findByCodeTypeAndCodeId")
 	CodeMstMap findByCodeTypeAndCodeId(@RequestParam("codeType") String codeType, @RequestParam("codeId") String codeId);
 	
-	@RequestMapping(value = "/findAllUnit", method = {RequestMethod.GET})
+	@RequestMapping(value = "/code/findAllUnit", method = {RequestMethod.GET})
     List<UnitMap> findAllUnit();
 	
-	@RequestMapping(value = "/findByCodeType", method = {RequestMethod.GET})
+	@RequestMapping(value = "/code/findByCodeType", method = {RequestMethod.GET})
     List<CodeMstMap> findByCodeType(@RequestParam("codeType") String codeType);
 	
 }
