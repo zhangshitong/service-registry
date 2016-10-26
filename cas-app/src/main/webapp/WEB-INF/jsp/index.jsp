@@ -4,6 +4,8 @@
     <title></title>
 </head>
 <body>
-   ${model.USERINFO}
+   用户信息：
+   ${user.username}
+   <a href="${ctx}/logout.do">注销</a>
 </body>
 </html>

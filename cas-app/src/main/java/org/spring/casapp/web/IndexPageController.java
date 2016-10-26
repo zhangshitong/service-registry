@@ -25,8 +25,11 @@ public class IndexPageController extends HttpClientController {
 	public ModelAndView homePage(HttpServletRequest request, HttpServletResponse  response, HttpSession session) throws NullSessionException, SessionValidateException, IOException {
 		if(!checkValidLoginedSession(session))  throw new SessionValidateException();
 		Map model = new HashMap();
+		request.setAttribute("ctx", request.getContextPath());
 		UserInfo info = loadUserInfo(session);
-		model.put("USERINFO", info);
+		log.info("user info: " + info.getAccount());
+		model.put("user", info);
+
 		return new ModelAndView("index", model);
 	}
 	/**

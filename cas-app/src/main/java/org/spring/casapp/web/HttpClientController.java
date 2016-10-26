@@ -1,6 +1,8 @@
 package org.spring.casapp.web;
 import org.spring.casapp.NullSessionException;
 import org.spring.casapp.UserInfo;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -19,10 +21,14 @@ public abstract class HttpClientController {
 		if(session.getId() == null) {
 			throw new NullSessionException();
 		}
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(session.getAttribute(SESSIONUSERINFO) != null){
 			return (UserInfo) session.getAttribute(SESSIONUSERINFO) ;
 		}
-		return null;
+		UserInfo userInfo =  retriveUserInfoFromSpringSecurityContext();
+		setValidLoginedInfo(session, userInfo);
+		return userInfo;
+//		return null;
 	}
 	/**
 	 * 设置当前登录用户的UserInfo
@@ -30,7 +36,7 @@ public abstract class HttpClientController {
 	 * @param userInfo
 	 * @throws NullSessionException
 	 */
-	public void setValidLoginedInfo(HttpSession session, UserInfo userInfo) throws NullSessionException{
+	private void setValidLoginedInfo(HttpSession session, UserInfo userInfo) throws NullSessionException{
 		if(session.getId() == null) {
 			throw new NullSessionException();
 		}
@@ -71,5 +77,14 @@ public abstract class HttpClientController {
     	return f;
     }
 
-
+	private UserInfo retriveUserInfoFromSpringSecurityContext(){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication != null){
+			UserInfo u = new UserInfo();
+			u.setAccount(authentication.getName());
+			u.setUsername(authentication.getName());
+			return u;
+		}
+		return null;
+	}
 }
