@@ -31,10 +31,17 @@
         <property name="filterProcessesUrl" value="/logout.do"/>
     </bean>
 
-    <bean id="casFilter"
-          class="org.springframework.security.cas.web.CasAuthenticationFilter">
+    <bean id="casFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationFailureHandler">
+                <bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+                    <property name="defaultFailureUrl" value="/validate_error.html"/>
+                    <property name="allowSessionCreation" value="false"/>
+                </bean>
+         </property>
     </bean>
+
+
 
     <bean id="casEntryPoint"
           class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
