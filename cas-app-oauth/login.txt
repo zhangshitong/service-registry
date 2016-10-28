@@ -1,0 +1,5 @@
+1. /console/login
+2. /console/putUser?name=stzhang&age=88
+3. /console/getUser?name=stzhang
+4. /console/listUser
+5. /console/user; userPrincipal

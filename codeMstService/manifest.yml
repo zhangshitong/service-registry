@@ -1,8 +1,8 @@
 ---
 applications:
-- name: supervision-service
+- name: code-service
   memory: 1024M
-path: target/iSupervisionService-0.0.1-SNAPSHOT.jar
+path: target/codeMstService-0.0.1-SNAPSHOT.jar
 buildpack: java_buildpack_offline
 env:
     CF_TARGET: https://api.system.iisipcf.io

@@ -74,8 +74,6 @@ public class SsoApplication {
 	@EnableOAuth2Sso
 	public static class LoginConfigurer extends WebSecurityConfigurerAdapter {
 
-		@Value("${security.trust.origin}")
-		private String trustOrigin;
 
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
@@ -102,9 +100,6 @@ public class SsoApplication {
 						cookie.setPath(request.getContextPath());
 						response.addCookie(cookie);
 					}
-					response.addHeader("Access-Control-Allow-Origin",trustOrigin);
-					response.addHeader("Access-Control-Allow-Methods","GET,POST,DELETE,PUT");
-					response.addHeader("Access-Control-Allow-Credentials","true");
 					filterChain.doFilter(request, response);
 				}
 			};
