@@ -1,8 +1,8 @@
 ---
 applications:
-- name: oauth-server
+- name: eureka-server
   memory: 1024M
-path: target/authserver-0.0.1-SNAPSHOT.jar
+path: target/springeureka-0.0.1-SNAPSHOT.jar
 buildpack: java_buildpack_offline
 env:
     CF_TARGET: https://api.sytlj.com
