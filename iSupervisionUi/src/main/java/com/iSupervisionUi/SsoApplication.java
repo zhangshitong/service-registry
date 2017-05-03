@@ -62,7 +62,6 @@ public class SsoApplication {
 	@Component
 	@EnableOAuth2Sso
 	public static class LoginConfigurer extends WebSecurityConfigurerAdapter {
-
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
 			http.headers().frameOptions().disable();

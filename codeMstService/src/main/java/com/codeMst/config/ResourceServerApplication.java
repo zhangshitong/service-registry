@@ -3,12 +3,14 @@ package com.codeMst.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 /**
@@ -41,8 +43,11 @@ public class ResourceServerApplication {
     @RestController
     public static class UserPrincipalCtl {
         @RequestMapping("/fetch/user")
-        public Principal user(Principal user) {
+        public Principal user(HttpServletRequest request) {
+            Principal user = request.getUserPrincipal();
             return user;
+
+//            SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         }
 
     }
