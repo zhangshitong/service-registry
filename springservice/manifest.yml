@@ -1,6 +1,0 @@
----
-applications:
-- name: springservice
-  memory: 512M
-  host: springservice
-  domain: local.pcfdev.io
