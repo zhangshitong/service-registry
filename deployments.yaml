@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: service-registry-backup
+  namespace: myproject
+  selfLink: /oapi/v1/namespaces/myproject/deploymentconfigs/service-registry-backup
+  uid: 8a42c130-6b79-11e7-9839-c6ad6b1b6a10
+  resourceVersion: '39275'
+  generation: 4
+  creationTimestamp: '2017-07-18T05:25:41Z'
+  labels:
+    app: service-registry-backup
+  annotations:
+    openshift.io/generated-by: OpenShiftWebConsole
+spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - service-registry-2
+        from:
+          kind: ImageStreamTag
+          namespace: myproject
+          name: 'service-registry-2:latest'
+        lastTriggeredImage: >-
+          172.30.1.1:5000/myproject/service-registry-2@sha256:5e57c9339b487a2e4315d55ec95faebec96de156a9aa0a46723b070e53080d6c
+    - type: ConfigChange
+  replicas: 2
+  test: false
+  selector:
+    deploymentconfig: service-registry-backup
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: service-registry-backup
+        deploymentconfig: service-registry-backup
+    spec:
+      containers:
+        - name: service-registry-2
+          image: >-
+            172.30.1.1:5000/myproject/service-registry-2@sha256:5e57c9339b487a2e4315d55ec95faebec96de156a9aa0a46723b070e53080d6c
+          ports:
+            - containerPort: 8761
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+status:
+  latestVersion: 2
+  observedGeneration: 4
+  replicas: 2
+  updatedReplicas: 2
+  availableReplicas: 2
+  unavailableReplicas: 0
+  details:
+    message: image change
+    causes:
+      - type: ImageChange
+        imageTrigger:
+          from:
+            kind: ImageStreamTag
+            namespace: myproject
+            name: 'service-registry-2:latest'
+  conditions:
+    - type: Available
+      status: 'True'
+      lastUpdateTime: '2017-07-18T10:18:40Z'
+      lastTransitionTime: '2017-07-18T10:18:40Z'
+      message: Deployment config has minimum availability.
+    - type: Progressing
+      status: 'True'
+      lastUpdateTime: '2017-07-18T10:34:31Z'
+      lastTransitionTime: '2017-07-18T10:34:30Z'
+      reason: NewReplicationControllerAvailable
+      message: replication controller "service-registry-2-2" successfully rolled out
+  readyReplicas: 1
