@@ -1,0 +1,9 @@
+**/.settings
+**/target/
+*.iml
+*.log
+.idea
+.mvn
+.project
+.classpath
+MANIFEST.MF
